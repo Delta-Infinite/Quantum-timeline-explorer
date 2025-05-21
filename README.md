@@ -18,7 +18,7 @@ Traditional quantum computing tools offer only collapsed, single-shot outputs. T
 ---
 
 ## Core Architecture
-
+![Quantum Timeline Diagram](./9FCDF938-00B5-445B-9D1F-9AC879D2F223.jpeg)
 | Layer | Description |
 |-------|-------------|
 | **Quantum Backend** | Qiskit-based simulator for running 3–5 qubit circuits (e.g., Grover’s, Bell states) |
