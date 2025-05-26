@@ -1,0 +1,74 @@
+[
+  {
+    "bitstring": "000",
+    "probability": 0.125,
+    "coords": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "bitstring": "001",
+    "probability": 0.15,
+    "coords": [
+      0,
+      0,
+      1
+    ]
+  },
+  {
+    "bitstring": "010",
+    "probability": 0.1,
+    "coords": [
+      0,
+      1,
+      0
+    ]
+  },
+  {
+    "bitstring": "011",
+    "probability": 0.05,
+    "coords": [
+      0,
+      1,
+      1
+    ]
+  },
+  {
+    "bitstring": "100",
+    "probability": 0.2,
+    "coords": [
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "bitstring": "101",
+    "probability": 0.15,
+    "coords": [
+      1,
+      0,
+      1
+    ]
+  },
+  {
+    "bitstring": "110",
+    "probability": 0.1,
+    "coords": [
+      1,
+      1,
+      0
+    ]
+  },
+  {
+    "bitstring": "111",
+    "probability": 0.125,
+    "coords": [
+      1,
+      1,
+      1
+    ]
+  }
+]
