@@ -10,8 +10,9 @@
 </head>
 <body>
 <script type="module">
-  import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-  import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+  // Try using cdn.jsdelivr.net instead of unpkg
+  import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+  import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
   
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
@@ -30,8 +31,8 @@
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambientLight);
   
-  const url = new URL('./quantum_probability_cloud.json', import.meta.url);
-  fetch(url)
+  // Use a relative path without import.meta.url
+  fetch('./quantum_probability_cloud.json')
     .then(response => {
       if (!response.ok) throw new Error("Failed to load JSON: " + response.status);
       return response.json();
