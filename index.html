@@ -7,13 +7,13 @@
     body { margin: 0; overflow: hidden; background-color: #000000; }
     canvas { display: block; }
   </style>
+  <!-- Import Three.js using traditional script tags -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-<script type="module">
-  // Try using cdn.jsdelivr.net instead of unpkg
-  import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-  import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-  
+<script>
+  // Now THREE is available globally
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
   
@@ -24,14 +24,14 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   
-  // Add some ambient light so we can see the spheres better
+  // Add some ambient light
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambientLight);
   
-  // Use a relative path without import.meta.url
+  // Load the JSON data
   fetch('./quantum_probability_cloud.json')
     .then(response => {
       if (!response.ok) throw new Error("Failed to load JSON: " + response.status);
