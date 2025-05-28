@@ -7,13 +7,14 @@
     body { margin: 0; overflow: hidden; background-color: #000000; }
     canvas { display: block; }
   </style>
-  <!-- Import Three.js using traditional script tags -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 <script>
-  // Now THREE is available globally
+  console.log("Script starting...");
+  console.log("THREE loaded?", typeof THREE !== 'undefined');
+  
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
   
@@ -23,23 +24,36 @@
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+  console.log("Canvas added?", document.querySelector('canvas') !== null);
   
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   
-  // Add some ambient light
+  // Add lighting
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambientLight);
+  
+  // Add a test cube to make sure rendering works
+  const testGeometry = new THREE.BoxGeometry(1, 1, 1);
+  const testMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const testCube = new THREE.Mesh(testGeometry, testMaterial);
+  scene.add(testCube);
+  console.log("Test cube added");
   
   // Load the JSON data
   fetch('./quantum_probability_cloud.json')
     .then(response => {
+      console.log("JSON fetch response:", response.status);
       if (!response.ok) throw new Error("Failed to load JSON: " + response.status);
       return response.json();
     })
     .then(data => {
       console.log("Quantum data loaded! Number of points:", data.length);
-      data.forEach(point => {
+      
+      // Remove test cube
+      scene.remove(testCube);
+      
+      data.forEach((point, index) => {
         const [x, y, z] = point.coords;
         const radius = point.probability * 0.3 + 0.05;
         const color = new THREE.Color().setHSL(point.probability * 0.8, 1.0, 0.6);
@@ -49,7 +63,16 @@
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set((x - 1.5), (y - 1.5), (z - 1.5));
         scene.add(sphere);
+        
+        if (index === 0) {
+          console.log("First sphere:", {
+            position: sphere.position,
+            radius: radius,
+            color: color.getHexString()
+          });
+        }
       });
+      console.log("All spheres added. Total objects in scene:", scene.children.length);
     })
     .catch(error => console.error("Error loading quantum data:", error));
   
@@ -59,6 +82,7 @@
     renderer.render(scene, camera);
   }
   animate();
+  console.log("Animation started");
   
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
