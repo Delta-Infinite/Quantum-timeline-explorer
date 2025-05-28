@@ -7,11 +7,21 @@
     body { margin: 0; overflow: hidden; background-color: #000000; }
     canvas { display: block; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Import map to resolve the module paths -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
-<script>
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  
   console.log("Script starting...");
   console.log("THREE loaded?", typeof THREE !== 'undefined');
   
@@ -26,19 +36,17 @@
   document.body.appendChild(renderer.domElement);
   console.log("Canvas added?", document.querySelector('canvas') !== null);
   
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   
   // Add lighting
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambientLight);
   
-  // Add a test cube to make sure rendering works
-  const testGeometry = new THREE.BoxGeometry(1, 1, 1);
-  const testMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  const testCube = new THREE.Mesh(testGeometry, testMaterial);
-  scene.add(testCube);
-  console.log("Test cube added");
+  // Add a directional light for better visibility
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  directionalLight.position.set(5, 5, 5);
+  scene.add(directionalLight);
   
   // Load the JSON data
   fetch('./quantum_probability_cloud.json')
@@ -50,16 +58,18 @@
     .then(data => {
       console.log("Quantum data loaded! Number of points:", data.length);
       
-      // Remove test cube
-      scene.remove(testCube);
-      
       data.forEach((point, index) => {
         const [x, y, z] = point.coords;
         const radius = point.probability * 0.3 + 0.05;
         const color = new THREE.Color().setHSL(point.probability * 0.8, 1.0, 0.6);
         
         const geometry = new THREE.SphereGeometry(radius, 16, 16);
-        const material = new THREE.MeshBasicMaterial({ color: color });
+        // Use MeshPhongMaterial for better lighting
+        const material = new THREE.MeshPhongMaterial({ 
+          color: color,
+          emissive: color,
+          emissiveIntensity: 0.3
+        });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set((x - 1.5), (y - 1.5), (z - 1.5));
         scene.add(sphere);
